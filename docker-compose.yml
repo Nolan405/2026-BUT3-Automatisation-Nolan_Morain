@@ -1,0 +1,37 @@
+services:
+  db:
+    image: mariadb:12
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: tasklist
+      MYSQL_USER: taskuser
+      MYSQL_PASSWORD: taskpassword
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: ./backend
+    environment:
+      Database__host: db
+      Database__database: tasklist
+      Database__user: taskuser
+      Database__password: taskpassword
+      ASPNETCORE_ENVIRONMENT: dev
+    depends_on:
+      db:
+        condition: service_healthy
+
+  front:
+    build: ./frontend
+    ports:
+      - "2006:80"
+    depends_on:
+      - api
+
+volumes:
+  db_data:

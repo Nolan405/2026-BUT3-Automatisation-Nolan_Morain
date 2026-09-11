@@ -1,0 +1,15 @@
+FROM mcr.microsoft.com/dotnet/sdk:10.0
+
+WORKDIR /app
+
+COPY . .
+
+RUN dotnet restore api.slnx
+
+RUN dotnet publish src/TaskList.Api/TaskList.Api.csproj -c Release -o out
+
+ENV ASPNETCORE_URLS=http://+:8080
+EXPOSE 8080
+
+WORKDIR /app/out
+ENTRYPOINT ["dotnet", "TaskList.Api.dll"]
