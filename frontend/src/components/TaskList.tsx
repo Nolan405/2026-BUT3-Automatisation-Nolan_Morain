@@ -7,7 +7,7 @@ import List from '@mui/material/List'
 import Typography from '@mui/material/Typography'
 import { useTasks } from '../api/tasks'
 import { useNotifications } from '../notifications/useNotifications'
-import TaskListItem from './TaskListItem'
+import TaskListItem from './TaskListItem' 
 
 export default function TaskList() {
   const { data: tasks, isPending, isError, error } = useTasks()
