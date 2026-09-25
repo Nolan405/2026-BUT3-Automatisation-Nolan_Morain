@@ -18,9 +18,7 @@ RUN dotnet publish ./src/TaskList.Api/TaskList.Api.csproj -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS finale
 
-WORKDIR /app
-
-COPY --from=build /app/out .
+WORKDIR /app/out
 
 ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
@@ -31,8 +29,9 @@ apt-get install -y curl
 EOF
 
 HEALTHCHECK --interval=5m --timeout=3s \
-    CMD curl -f http://localhost/8080 || exit 1
+    CMD curl -f http://localhost:8080 || exit 1
 
+COPY --from=build /app/out .
 USER $APP_UID
 
 ENTRYPOINT ["dotnet", "TaskList.Api.dll"]

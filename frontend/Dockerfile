@@ -3,11 +3,17 @@ FROM node:22-alpine AS build
 WORKDIR /app
 
 RUN corepack enable
-COPY . .
+
+COPY .yarnrc.yml yarn.lock package.json ./
+
 RUN yarn
+COPY . .
 RUN yarn build
 
-FROM nginx:alpine
+FROM nginx:1.31-alpine
 
-COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

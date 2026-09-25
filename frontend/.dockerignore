@@ -1,0 +1,9 @@
+Dockerfile
+**/bin
+**/tests
+**/test
+**/obj
+.editorconfig
+.env.example
+**/src/App.test.tsx
+**/dist
