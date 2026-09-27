@@ -136,3 +136,14 @@ real    0m8,402s
 user    0m0,088s
 sys     0m0,035s
 ```
+
+# Casser volontairement, puis réparer
+
+1. Quel job échoue ? L'autre s'exécute-t-il quand même ? Le job front a-t-il été affecté ?
+
+```text
+C'est le job api qui échoue. Le job front c'est exécuté qaund même et est passé au vert (36s), et n'a pas été affecté car les deux jobs sont totalement indépendants.
+```
+![alt text](image.png)
+
+![alt text](image-2.png)
