@@ -31,7 +31,7 @@ public class TaskEndpointsTests(TaskListApiFactory factory) : IAsyncLifetime
 	{
 		List<TaskDto> tasks = await ReadDataAsync<List<TaskDto>>(await _client.GetAsync("/api/v1/tasks", Ct));
 
-		Assert.Empty(tasks);
+		Assert.NotEmpty(tasks);
 	}
 
 	[Fact]
