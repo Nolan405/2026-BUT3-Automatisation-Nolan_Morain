@@ -6,7 +6,7 @@
 | Build complet (--no-cache) | 22,87s | 28,94s |
 | Build après modification du code | 27,93s | 6,99s |
 | UID du processus | 0 (root) | 1654 (app) |
-| Durée de docker stop | pas mesuré | . |
+| Durée de docker stop | pas mesuré | 0,27s |
 
 ### Frontend
 
@@ -16,7 +16,7 @@
 | Build complet (--no-cache) | 30,07s | 37,32s |
 | Build après modification du code | 34,27s | 8,13s |
 | UID du processus | 0 (root) | 0 (root) |
-| Durée de docker stop | pas mesuré | . |
+| Durée de docker stop | pas mesuré | 0.24s |
 
 
 # Casser volontairement, puis réparer
