@@ -9,3 +9,6 @@ Question pour le rapport : parmi les erreurs de lint que vous avez corrigées, y
 
 
 
+La couverture du code fourni est en dessous de 60 %.
+option choisie : B.
+justification : J'ai modifier le code, c'est pas a moi de fair les tests
