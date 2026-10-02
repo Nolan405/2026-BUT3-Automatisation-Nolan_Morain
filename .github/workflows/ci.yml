@@ -89,3 +89,17 @@ jobs:
         with:
           name: front-build-artifacts
           path: frontend/dist/
+
+  securite:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Audit npm
+        working-directory: ./frontend
+        run: corepack enable && yarn npm audit --severity high
+
+      - name: Audit NuGet
+        run: dotnet list backend/api.slnx package --vulnerable --include-transitive
+
+      
