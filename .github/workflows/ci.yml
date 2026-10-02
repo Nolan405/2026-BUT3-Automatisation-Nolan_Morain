@@ -27,7 +27,7 @@ jobs:
         run: dotnet build api.slnx --no-restore --configuration Release
 
       - name: Vérifier le formatage
-        run: dotnet format backend/api.slnx --verify-no-changes
+        run: dotnet format api.slnx --verify-no-changes
 
       - name: Test avec couverture
         run: >
@@ -46,7 +46,7 @@ jobs:
 
       - name: Ajouter au résumé du run
         if: always()
-        run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+        run: cat ../code-coverage-results.md >> $GITHUB_STEP_SUMMARY
           # ../code-coverage-results.md si vous avez le working directory à backend
 
       - uses: actions/upload-artifact@v4
