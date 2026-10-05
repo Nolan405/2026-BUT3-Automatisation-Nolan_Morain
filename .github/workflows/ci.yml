@@ -108,4 +108,25 @@ jobs:
             exit 1
           fi
 
+      - name: Construire l'image API
+        run: docker build -t api:scan ./backend
+
+      - name: Scanner l'image API
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: 'api:scan'
+          severity: 'CRITICAL'
+          exit-code: '1'
+          ignore-unfixed: true
+
+      - name: Construire l'image web
+        run: docker build -t web:scan ./frontend
+
+      - name: Scanner l'image web
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: 'web:scan'
+          severity: 'HIGH,CRITICAL'
+          exit-code: '1'
+          ignore-unfixed: true
       

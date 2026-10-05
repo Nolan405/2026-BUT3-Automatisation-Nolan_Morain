@@ -9,7 +9,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
 		<PackageReference Include="Storm.Api" Version="10.0.19" />
 		<PackageReference Include="Storm.Api.Dtos" Version="10.0.19" />
 		<PackageReference Include="Storm.Api.SourceGenerators" Version="10.0.19" OutputItemType="Analyzer" ReferenceOutputAssembly="false">
