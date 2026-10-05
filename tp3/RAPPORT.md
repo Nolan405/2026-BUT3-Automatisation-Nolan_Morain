@@ -18,3 +18,5 @@ Pour la partie scanner l'image, Le scan Trivy du frontend a bloqué à cause de 
 
 masque les vulnérabilités pour lesquelles aucun correctif n'existe. Sans cette option, vous seriez bloqués par des problèmes que vous ne pouvez pas résoudre. Est-ce une bonne idée en production ?
 -> Non, cela évite juste de bloquer le déploiement, mais les failles restent présentes. En production, il faudra surveiller ces failles et y mettre en place plusieurs protections (règles de pare-feu, restriction des accès réseau, etc).
+
+![alt text](screen1.png)
