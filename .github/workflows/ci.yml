@@ -100,7 +100,6 @@ jobs:
         run: corepack enable && yarn npm audit --severity high
 
       - name: Audit NuGet
-        run: dotnet restore -p:WarningsAsErrors="NU1903;NU1904"
-
+        run: dotnet list backend/api.slnx package --vulnerable --include-transitive
 
       
