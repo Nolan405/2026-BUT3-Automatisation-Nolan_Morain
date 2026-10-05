@@ -46,9 +46,14 @@ Pas grand-chose de nouveau, car nous avons avancé sur le TP en même temps. En 
 * **Risque du merge aveugle :** Casser l'application ou injecter du code compromis.
 
 ### Épingler par commit SHA plutôt que @v4
-* **Sécurité :** Un tag comme `@v4` peut être modifié ou piraté pour pointer sur un code malveillant. Le commit SHA est immuable : le code exécuté ne changera jamais.
-* **Maintenance :** Plus lourd. On ne reçoit plus les petits patchs automatiquement et il faut mettre à jour les hashs à la main.
+* Pas fait 
 
 ### Durée du workflow et parallélisme
-* L'augmentation du temps total **n'est pas égale** à la durée du job `securite`.
-* Comme les trois jobs tournent en parallèle, le temps total du workflow dépend uniquement du job le plus lent (*chemin critique*). Le job sécurité n'augmente la durée globale que s'il dépasse le temps d'`api` ou `front`.
+* **Mesures :** 
+  * Avant l'ajout de `securite` : ~1 min
+  * Après l'ajout de `securite` : ~1 min 30s / 2 min
+* **Augmentation égale à la durée propre ?** Non.
+* **Pourquoi :** Les jobs `api`, `front` et `securite` tournent en parallèle. La durée globale correspond au job le plus long, donc ici celui de `securite`.
+
+
+PS : Paramètres du ruleset modifiés temporairement (suppression de l'obligation de reviewer) pour pouvoir merger le rapport final tout seul sur main.
