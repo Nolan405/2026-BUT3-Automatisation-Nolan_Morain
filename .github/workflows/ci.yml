@@ -2,8 +2,11 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, tp3-inspection]
   pull_request:
+
+permissions:
+  contents: read
 
 jobs:
   api:
@@ -26,10 +29,28 @@ jobs:
       - name: Compiler
         run: dotnet build api.slnx --no-restore --configuration Release
 
-      - name: Tester
+      - name: Vérifier le formatage
+        run: dotnet format api.slnx --verify-no-changes
+
+      - name: Test avec couverture
         run: >
-          dotnet test api.slnx --no-restore --no-build --configuration Release
-          --results-directory ./TestResults --report-xunit-trx
+          dotnet test api.slnx --no-restore --no-build --configuration Release 
+          --results-directory ./TestResults --report-xunit-trx --coverage --coverage-output-format cobertura
+
+      - name: Résumé de couverture
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          badge: true
+          filename: ./**/*.cobertura.xml
+          fail_below_min: true
+          thresholds: '40 80'
+          format: markdown
+          output: both
+
+      - name: Ajouter au résumé du run
+        if: always()
+        run: cat ../code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+          # ../code-coverage-results.md si vous avez le working directory à backend
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -60,6 +81,9 @@ jobs:
       - name: Construire
         run: yarn build
 
+      - name: Lint
+        run: yarn run lint
+
       - name: Tester
         run: yarn test
 
@@ -68,3 +92,44 @@ jobs:
         with:
           name: front-build-artifacts
           path: frontend/dist/
+
+  securite:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Audit npm
+        working-directory: ./frontend
+        run: corepack enable && yarn npm audit --severity high
+
+      - name: Audit NuGet
+        run: |
+          OUTPUT=$(dotnet list backend/api.slnx package --vulnerable --include-transitive)
+          echo "$OUTPUT"
+          if echo "$OUTPUT" | grep -Ei "has the following vulnerable packages|(Critical|High)"; then
+            echo "Vulnérabilités détectées !"
+            exit 1
+          fi
+
+      - name: Construire l'image API
+        run: docker build -t api:scan ./backend
+
+      - name: Scanner l'image API
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: 'api:scan'
+          severity: 'CRITICAL'
+          exit-code: '1'
+          ignore-unfixed: true
+
+      - name: Construire l'image web
+        run: docker build -t web:scan ./frontend
+
+      - name: Scanner l'image web
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: 'web:scan'
+          severity: 'HIGH,CRITICAL'
+          exit-code: '1'
+          ignore-unfixed: true
+      
