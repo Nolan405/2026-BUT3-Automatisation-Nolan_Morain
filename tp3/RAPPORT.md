@@ -15,3 +15,6 @@ justification : J'ai modifier le code, c'est pas a moi de fair les tests
 
 
 Pour la partie scanner l'image, Le scan Trivy du frontend a bloqué à cause de deux paquets Alpine pas à jour (libexpat / pcre2). J'ai réglé le problème en ajoutant un RUN apk update && apk upgrade --no-cache dans le Dockerfile pour forcer leur mise à jour.
+
+masque les vulnérabilités pour lesquelles aucun correctif n'existe. Sans cette option, vous seriez bloqués par des problèmes que vous ne pouvez pas résoudre. Est-ce une bonne idée en production ?
+-> Oui, pour éviter de bloquer le déploiement. Comme les failles seront présentes en production, il faudra surveiller ces failles, et mettre en palce plusieurs protetions dessus (règles de pare-feu, restriction des accès réseau, etc).
