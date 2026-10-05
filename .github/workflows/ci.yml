@@ -100,6 +100,12 @@ jobs:
         run: corepack enable && yarn npm audit --severity high
 
       - name: Audit NuGet
-        run: dotnet list backend/api.slnx package --vulnerable --include-transitive
+        run: |
+          OUTPUT=$(dotnet list backend/api.slnx package --vulnerable --include-transitive)
+          echo "$OUTPUT"
+          if echo "$OUTPUT" | grep -Ei "has the following vulnerable packages|(Critical|High)"; then
+            echo "Vulnérabilités détectées !"
+            exit 1
+          fi
 
       
