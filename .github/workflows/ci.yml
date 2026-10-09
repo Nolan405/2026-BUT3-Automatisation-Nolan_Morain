@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, tp3-inspection]
+    branches: [main, tp3-inspection, tp4-publication-deployement']
   pull_request:
 
 permissions:
@@ -163,3 +163,21 @@ jobs:
           tags: |
             docker.iut.arcanit.io/${{ secrets.DOCKER_USER }}/web:${{ github.sha }}
             docker.iut.arcanit.io/${{ secrets.DOCKER_USER }}/web:main
+
+  deployer-test:
+    needs: [publier]
+    runs-on: ubuntu-latest
+    steps:
+      # Vous aurez besoin d'un -uses en plus ici à la fin du 4.3
+    
+      - name: Configurer SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VM_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p ${{ secrets.VM_SSH_PORT }} -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Vérifier l'accès
+        run: |
+          ssh ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} -p ${{ secrets.VM_SSH_PORT }} \
+            'docker version --format "{{.Server.Version}}"'
