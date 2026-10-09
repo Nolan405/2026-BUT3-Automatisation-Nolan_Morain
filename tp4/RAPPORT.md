@@ -102,3 +102,27 @@ root@devbox-etu25:~/apps/test# docker images --digests | grep api
 docker.iut.arcanit.io/etu25/api   06d6b8449589cf2c78033a80c9d21034b036dcb6   sha256:acf00dd77e8bf2924142703280fc9898145da0b54d157d79f1204728570dad70   4d9b46b9c0c3   13 minutes ago   349MB
 docker.iut.arcanit.io/etu25/api   93d6ddf9bee582aa0ffe614ad696b754d74dbcdb   sha256:c3baa6101806fd0ede960d10b5ad06612fbca60753fc9472b466c32db07f237b   a9eb6a4bb9fe   21 minutes ago   349MB
 tp-automatisation-api             latest                                     <none>                                                                    26351b257ba1   7 days ago       349MB
+
+
+
+
+
+
+
+root@devbox-etu25:~/apps/test# docker images --digests | grep web
+docker.iut.arcanit.io/etu25/web   99ec47f9a9e6b51b76b22c94854247a3185f47c6   sha256:d2440c4a750fcb4cbd603c672d883e0a2f605cffe915e5170f23f08e0fdee85f   316ec2697d2d   About a minute ago   75.1MB
+docker.iut.arcanit.io/etu25/web   06d6b8449589cf2c78033a80c9d21034b036dcb6   sha256:324cb627cd3219d020b87bd13a0f0b17126acff406dcacb70f7d7719ac30882d   357f74e89ef2   26 minutes ago       75.1MB
+docker.iut.arcanit.io/etu25/web   93d6ddf9bee582aa0ffe614ad696b754d74dbcdb   sha256:124df6f0199c2253fb3b9d62540626bbf5ef108e5bd4e3eeebaf6dff5c5a4731   c97853904ef9   35 minutes ago       75.1MB
+root@devbox-etu25:~/apps/test# ls -l ~/apps/test/.env
+-rw------- 1 root root 32 oct.   9 16:32 /home/etu25/work/apps/test/.env
+
+
+
+
+
+
+
+### 1. Informations de l'environnement de test
+* **URL de l'application :** `https://nolan-morain-test.iut.arcanit.io`
+* **SHA des images actuellement déployées :** `99ec47f9a9e6b51b76b22c94854247a3185f47c6` # a modfiier apres commit final
+
