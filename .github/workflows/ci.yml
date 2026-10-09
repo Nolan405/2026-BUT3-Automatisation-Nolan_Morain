@@ -168,6 +168,8 @@ jobs:
     needs: [publier]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - name: Copier le fichier Compose
         run: |
           scp -P ${{ secrets.VM_SSH_PORT }} deploy/compose.test.yml \
