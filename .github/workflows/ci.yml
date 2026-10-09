@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, tp3-inspection]
+    branches: [main, tp3-inspection, tp4-publication-deployement']
   pull_request:
 
 permissions:
