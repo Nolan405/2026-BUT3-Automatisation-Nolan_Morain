@@ -135,7 +135,7 @@ jobs:
   
   publier:
     # needs: [api, front, securite] # Penser à le remettre à la fin
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -189,5 +189,10 @@ jobs:
 
       - name: Déployer
         run: |
+          - name: Déployer
+        run: |
           ssh -p ${{ secrets.VM_SSH_PORT }} ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} \
-            "cd ~/apps/test && IMAGE_TAG=${{ github.sha }} docker compose up -d --pull always"
+            "cd ~/apps/test && echo '${{ secrets.DOCKER_PASSWORD }}' | docker login docker.iut.arcanit.io \
+            -u ${{ secrets.DOCKER_USER }} --password-stdin && IMAGE_TAG=${{ github.sha }} docker compose up -d --pull always"
+
+            
