@@ -134,8 +134,8 @@ jobs:
           ignore-unfixed: true
   
   publier:
-    # needs: [api, front, securite] # Penser à le remettre à la fin
-    # if: github.ref == 'refs/heads/main'
+    needs: [api, front, securite]
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
