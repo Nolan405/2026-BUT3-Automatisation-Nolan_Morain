@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, tp3-inspection, tp4-publication-deployement']
+    branches: [main, tp3-inspection, tp4-publication-deployement]
   pull_request:
 
 permissions:
@@ -168,7 +168,15 @@ jobs:
     needs: [publier]
     runs-on: ubuntu-latest
     steps:
-      # Vous aurez besoin d'un -uses en plus ici à la fin du 4.3
+      - name: Copier le fichier Compose
+        run: |
+          scp -P ${{ secrets.VM_SSH_PORT }} deploy/compose.test.yml \
+            ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }}:~/apps/test/compose.yml
+
+      - name: Déployer
+        run: |
+          ssh -p ${{ secrets.VM_SSH_PORT }} ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} \
+            "cd ~/apps/test && IMAGE_TAG=${{ github.sha }} docker compose up -d --pull always"
     
       - name: Configurer SSH
         run: |
