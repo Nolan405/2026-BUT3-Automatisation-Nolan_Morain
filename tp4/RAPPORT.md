@@ -47,6 +47,8 @@ Error response from daemon: No such image: docker.iut.arcanit.io/etu25/web:d6967
 Error: Process completed with exit code 1
 
 la VM ne peut pas télécharger les images car elle n'est pas connectée au registre Docker.
+Cause : Échec du docker compose up sur la VM par manque d'authentification au registre privé docker.iut.arcanit.io (no basic auth credentials).
+Solution : Exécution d'un docker login avec DOCKER_USER et DOCKER_PASSWORD en SSH sur la VM juste avant le déploiement.
 
 
 
@@ -54,3 +56,49 @@ la VM ne peut pas télécharger les images car elle n'est pas connectée au regi
 
 
 Lors du déploiement, comment est transmise l'information de quelle image doit être lancée ? Notez votre réponse dans le rapport.
+
+
+
+
+
+
+
+Sur github le commit que j'ai fusionné : 06d6b8449589cf2c78033a80c9d21034b036dcb6 
+
+root@devbox-etu25:~# docker compose -f ~/apps/test/compose.yml ps
+WARN[0000] The "IMAGE_TAG" variable is not set. Defaulting to a blank string. 
+WARN[0000] The "IMAGE_TAG" variable is not set. Defaulting to a blank string. 
+NAME           IMAGE                                                                      COMMAND                  SERVICE   CREATED          STATUS                            PORTS
+test-api-1     docker.iut.arcanit.io/etu25/api:06d6b8449589cf2c78033a80c9d21034b036dcb6   "dotnet TaskList.Api…"   api       2 minutes ago    Up 2 minutes (health: starting)   8080/tcp
+test-db-1      mariadb:12                                                                 "docker-entrypoint.s…"   db        10 minutes ago   Up 10 minutes (healthy)           3306/tcp
+test-front-1   docker.iut.arcanit.io/etu25/web:06d6b8449589cf2c78033a80c9d21034b036dcb6   "/docker-entrypoint.…"   front     2 minutes ago    Up 2 minutes                      0.0.0.0:52599->80/tcp, [::]:52599->80/tcp
+root@devbox-etu25:~# docker inspect --format '{{.Config.Image}}' $(docker compose -f ~/apps/test/compose.yml ps -q api)
+WARN[0000] The "IMAGE_TAG" variable is not set. Defaulting to a blank string. 
+WARN[0000] The "IMAGE_TAG" variable is not set. Defaulting to a blank string. 
+docker.iut.arcanit.io/etu25/api:06d6b8449589cf2c78033a80c9d21034b036dcb6
+
+
+
+
+
+
+etape 4
+
+
+La variable IMAGE_TAG doit être passée devant la commande Docker en manuel car elle est normalement injectée par GitHub Actions avec le SHA du commit lors des déploiements automatiques.
+
+
+
+root@devbox-etu25:~/apps/test# docker images --digests | grep api
+docker.iut.arcanit.io/etu25/api   06d6b8449589cf2c78033a80c9d21034b036dcb6   sha256:acf00dd77e8bf2924142703280fc9898145da0b54d157d79f1204728570dad70   4d9b46b9c0c3   11 minutes ago   349MB
+docker.iut.arcanit.io/etu25/api   93d6ddf9bee582aa0ffe614ad696b754d74dbcdb   sha256:c3baa6101806fd0ede960d10b5ad06612fbca60753fc9472b466c32db07f237b   a9eb6a4bb9fe   19 minutes ago   349MB
+tp-automatisation-api             latest                                     <none>                                                                    26351b257ba1   7 days ago       349MB
+root@devbox-etu25:~/apps/test# IMAGE_TAG=06d6b8449589cf2c78033a80c9d21034b036dcb6 docker compose -f ~/apps/test/compose.yml up -d
+[+] up 3/3
+ ✔ Container test-front-1 Running                                                                                                                                                            0.0s
+ ✔ Container test-db-1    Healthy                                                                                                                                                            6.7s
+ ✔ Container test-api-1   Started                                                                                                                                                            6.4s
+root@devbox-etu25:~/apps/test# docker images --digests | grep api
+docker.iut.arcanit.io/etu25/api   06d6b8449589cf2c78033a80c9d21034b036dcb6   sha256:acf00dd77e8bf2924142703280fc9898145da0b54d157d79f1204728570dad70   4d9b46b9c0c3   13 minutes ago   349MB
+docker.iut.arcanit.io/etu25/api   93d6ddf9bee582aa0ffe614ad696b754d74dbcdb   sha256:c3baa6101806fd0ede960d10b5ad06612fbca60753fc9472b466c32db07f237b   a9eb6a4bb9fe   21 minutes ago   349MB
+tp-automatisation-api             latest                                     <none>                                                                    26351b257ba1   7 days ago       349MB
